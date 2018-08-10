@@ -1,0 +1,3 @@
+coverage:
+  break_build: no
+  threshold_warn: 50

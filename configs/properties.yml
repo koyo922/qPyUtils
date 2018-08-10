@@ -1,0 +1,30 @@
+# 描述
+distutils_classifiers:
+  - "Development Status :: 2 - Pre-Alpha"
+  - "Environment :: Other Environment"
+  - "Intended Audience :: Developers"
+  - 'Programming Language :: Python'
+  - 'Programming Language :: Python :: 2.7'
+  - 'Programming Language :: Python :: 3.5'
+  - 'Programming Language :: Python :: 3.6'
+  - "Topic :: Software Development :: Libraries :: Python Modules"
+
+# 辅助配置文件
+read_profile_properties_dir: configs
+read_profile_properties_file_mask: 'properties_%s.yml'
+
+# 安装依赖
+install_dependencies_index_url: 'http://pip.baidu.com/root/baidu/+simple/'
+
+# 测试
+coverage_branch_threshold_warn: 50
+coverage_branch_partial_threshold_warn: 50
+
+# 编译时后处理
+filter_resources_glob: ['**/*.py']
+
+# 从README.md中提取供PyPI使用的 summary和description
+distutils_readme_description: true
+
+# 上传(使用~/.pypirc中的配置)
+distutils_upload_repository: pypi
