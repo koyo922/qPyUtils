@@ -30,14 +30,14 @@ use_plugin("filter_resources")
 use_plugin("python.distutils")
 use_plugin('copy_resources')
 
-
 default_task = ['install_dependencies', 'publish']
 
 # 注意这些基本属性还是不要写进yaml文件；它们跟property不同，不方便update进project对象
 name = 'qPyUtils'
 authors = [Author('Qian Weishuo ', 'qzy922@gmail.com'), ]
 license = 'MIT License'
-summary = 'python and bash utils, by qianws and his collection'
+summary = 'some handy tools for python / bash'
+description = 'python and bash utils, by qianws and his collection'
 url = 'https://github.com/koyo922/qPyUtils'
 version = '0.1.0.dev'
 
