@@ -20,7 +20,12 @@ install_dependencies_index_url: 'http://pip.baidu.com/root/baidu/+simple/'
 coverage_branch_threshold_warn: 50
 coverage_branch_partial_threshold_warn: 50
 
-# 编译时后处理
+# 拷贝资源文件到 build产出
+copy_resources_target: "${dir_dist}"
+copy_resources_glob:
+  - 'configs/*'
+
+# build后处理 filtering
 filter_resources_glob: ['**/*.py']
 
 # 从README.md中提取供PyPI使用的 summary和description
