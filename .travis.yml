@@ -8,3 +8,5 @@ install:
   - pyb install_dependencies
 script:
   - pyb publish -v
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
