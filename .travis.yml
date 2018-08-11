@@ -2,11 +2,10 @@ language: python
 python:
   - "2.7"
   - "3.5"
-  - "3.6"
 install:
   - pip install -r requirements-dev.txt
   - pyb install_dependencies
 script:
   - pyb publish -v
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - coveralls
