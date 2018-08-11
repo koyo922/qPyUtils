@@ -24,6 +24,7 @@ coverage_branch_partial_threshold_warn: 50
 copy_resources_target: "${dir_dist}"
 copy_resources_glob:
   - 'configs/*'
+  - 'README*'
 
 # 后处理filtering (构建时替换${version}之类的占位符)
 filter_resources_glob: ['**/*.py']
