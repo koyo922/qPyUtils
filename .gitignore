@@ -170,3 +170,4 @@ venv.bak/
 .mypy_cache/
 
 .idea/
+!/src/main/scripts/
