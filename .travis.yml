@@ -15,5 +15,10 @@ script:
 
 after_success:
   - codecov
+
 deploy:
-  - pyb upload -v
+  provider: script
+  skip_cleanup: true
+  script: pyb upload -v
+  on:
+    branch: master
