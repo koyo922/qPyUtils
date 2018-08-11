@@ -13,8 +13,8 @@ distutils_classifiers:
 read_profile_properties_dir: configs
 read_profile_properties_file_mask: 'properties_%s.yml'
 
-# 安装依赖
-install_dependencies_index_url: 'http://pip.baidu.com/root/baidu/+simple/'
+# 安装依赖(百度内网加速；公网上不生效)
+install_dependencies_extra_index_url: 'http://pip.baidu.com/root/baidu/+simple/'
 
 # 测试
 coverage_branch_threshold_warn: 50
@@ -25,7 +25,7 @@ copy_resources_target: "${dir_dist}"
 copy_resources_glob:
   - 'configs/*'
 
-# build后处理 filtering
+# 后处理filtering (构建时替换${version}之类的占位符)
 filter_resources_glob: ['**/*.py']
 
 # 从README.md中提取供PyPI使用的 summary和description
