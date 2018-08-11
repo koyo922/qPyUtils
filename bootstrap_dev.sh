@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-
 set -e
 #set -xv
 #PS4='$LINENO: '
 
+# This is the script for developers who want to contribute;
+# run it to configure the necessary environment; please modify it if necessary
+#
 # Usage:
 #
 # git clone ...
