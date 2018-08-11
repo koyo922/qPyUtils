@@ -4,7 +4,7 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install pybuilder
   - pip install -r requirements-dev.txt
+  - pyb install_dependencies
 script:
   - pyb publish -v
