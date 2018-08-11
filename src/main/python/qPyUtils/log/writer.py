@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
-
-################################################################################
-#
-# Copyright (c) 2018 Baidu.com, Inc. All Rights Reserved
-#
-################################################################################
-
 """
 module for getting logger, with default format_str compatible with baidu_style_guide
 # 参考百度编码规范 http://styleguide.baidu.com/style/python/index.html#%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5id9
@@ -15,7 +8,6 @@ module for getting logger, with default format_str compatible with baidu_style_g
 Authors: qianweishuo<qianweishuo@baidu.com>
 Date:    2018/8/10 下午4:29
 """
-
 import os
 import sys
 import logging
