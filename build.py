@@ -54,3 +54,5 @@ def init(project, logger):
 
     project.depends_on_requirements("requirements.txt")
     project.build_depends_on_requirements("requirements-dev.txt")
+
+    project.include_directory('configs', ['*'], package_root='')
