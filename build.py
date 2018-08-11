@@ -36,8 +36,6 @@ default_task = ['install_dependencies', 'publish']
 name = 'qPyUtils'
 authors = [Author('Qian Weishuo ', 'qzy922@gmail.com'), ]
 license = 'MIT License'
-summary = 'some handy tools for python / bash'
-description = 'python and bash utils, by qianws and his collection'
 url = 'https://github.com/koyo922/qPyUtils'
 version = '0.1.0.dev'
 
