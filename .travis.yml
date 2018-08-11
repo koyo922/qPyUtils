@@ -8,4 +8,4 @@ install:
 script:
   - pyb publish -v
 after_success:
-  - coveralls
+  - codecov
