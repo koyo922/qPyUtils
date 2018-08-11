@@ -1,7 +1,7 @@
 language: python
 python:
-  - "2.7"
-  - "3.5"
+  - '2.7'
+  - '3.5'
 install:
   - pip install -r requirements-dev.txt
   - pyb install_dependencies
@@ -9,3 +9,9 @@ script:
   - pyb publish -v
 after_success:
   - codecov
+deploy:
+  provider: pypi
+  user: koyo922
+  password:
+    secure: kKr0POzG1QZ7tup+myh29JrL4Ybx/mc5LvS9kD4UuCuS0o/kMan0uEmKXN5bSFCm55GtOk2VNOgO8oR0mQmqLVKWWtQs7hWwNefKpBZiliBX8VFvEi5ky2pzZ/poWC+RbdE99BS9INnOfjWMJyGtVJUQ6inpYkQNNdK9pAaIcPCTVErtrLRNymLDISDnYVZOWTOVqhb7Q9dtMiYzrx77nFRfibVc/ZumG/m397ReptzA0vm7oz2pi9nBclC0PXQwx7pNLuDZN8eqUoAfEy4bZ8uhdhe9SFxISC34YXKKMmczzFvw/jJxNMl+B+CNOXVP/6z+O1k3s4Mu506vLTu1mORFERlAGMRQWzJ9tURsb/7gYPUKuzXLd4FSjq+deNnVCWzY5t2E8sYAyWZXZuf5xodR4pxUuzw0MFyG25noZfFcj7nfguTVUWQAzqUxpxT/NMb2RAfBemSOzZhZJ5zC6Uc38TYRmZHHqtsq7pb1e2tJGvj7cKAAbtKbx8TI/LB4gAH19MpOgkCd6KtQ0MwfuN0Q6vtI6dAZz+eDneuKPugzufg9+4rm6psry9MXJk8vg50uR2+cMg2+zkdPzDUXZdTyW0a6OaxE9jixisSWKkSahVvpVlLE+dL67/ne0DDPfqfwbjhwUl2fZRPdQvPmX0UjltpZbG27LLN9sVDSf6A=
+  distributions: "sdist bdist_wheel"
