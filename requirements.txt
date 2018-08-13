@@ -1,2 +1,11 @@
 six
 pathlib
+pandas
+chainmap
+pyfunctional
+fn
+tqdm
+futures
+typing
+dirtyjson
+filelike

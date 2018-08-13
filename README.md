@@ -17,5 +17,8 @@ Python/Bash utils by qianws and his collections
 
 currently, includes:
 
+- `constant` for constants
+- `text` for text-processing related logic
+- `parallel` for multi-thread/process logic
 - `log.writer` for standardized style of using logger
-- ~~`log.parser` an extensible framework for parsing logs in parallel~~
+- `log.parser` an extensible framework for parsing logs in parallel
