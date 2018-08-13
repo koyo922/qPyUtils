@@ -26,10 +26,9 @@ class SnLogLoader(BaseLogParser):
         return datetime.strptime(file_path.stem, '%Y-%m-%d')
 
     def logfile2blocks(self, path):
-        # type: (Path) -> Iterable[str]
-        return (seq(csplit(path, re.compile(r'^{"vers')))
-                .map(''.join)
-                )
+        # type: (Path) -> Iterable[Text]
+        with path.open(mode='rt', encoding='utf8') as lines:
+            return seq(csplit(lines, re.compile(r'^{"vers'))).map(''.join)
 
     def block2records(self, block):
         # type: (Text) -> Iterable[dict]

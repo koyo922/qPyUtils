@@ -1,29 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
+from __future__ import unicode_literals
+import re
 
-from pathlib import Path
+import six
 from typing import Pattern, Text, Iterable, Tuple
 
 import dirtyjson
 
 
-def csplit(file_path, pattern):
-    # type: (Path, Pattern[Text]) -> Iterable[Tuple[Text]]
+def csplit(lines, pattern):
+    # type: (Iterable[Text], Union[Pattern[Text], Text]) -> Iterable[Tuple[Text]]
     """
-    模仿Linux Bash的csplit功能，对指定的文件，安装pattern分组切分
-    :param file_path:
-    :param pattern:
+    模仿Linux Bash的csplit功能，对指定的文本流(line-wise)，按照pattern分组切分
+    :param lines: 可迭代的文本流
+    :param pattern: 正则pattern对象 或者 相应的文本
     :return:
     """
     buffer = []
-    with file_path.open(mode='rt', encoding='utf8') as f:
-        for line in f:
-            if pattern.match(line):
-                if buffer:
-                    yield tuple(buffer)
-                buffer.clear()
-            buffer.append(line)
+    if isinstance(pattern, six.string_types):
+        pattern = re.compile(r'.*{}.*'.format(pattern))
+    for line in lines:
+        if pattern.match(line):
+            if buffer:
+                yield tuple(buffer)
+            del buffer[:]
+        buffer.append(line)
 
     if buffer:
         yield tuple(buffer)
