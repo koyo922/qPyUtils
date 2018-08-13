@@ -37,7 +37,7 @@ logger = init_log('./log/analyzer', 'log_loader')
 
 
 @six.add_metaclass(abc.ABCMeta)
-class BaseLogLoader:
+class BaseLogParser:
     """
     LogLoader基类，提供了统一的接口，供各个具体子类继承实现
     """
@@ -53,10 +53,11 @@ class BaseLogLoader:
         """
         self.take_files = take_files
         self.take_head = take_records
-        self.date_range = (seq(date_range)
-                           .map(lambda dt: dt if isinstance(dt, datetime) else datetime.strptime(dt, '%Y%m%d'))
-                           .to_list()
-                           )
+        self.date_range = None if date_range is None else \
+            (seq(date_range)
+             .map(lambda dt: dt if isinstance(dt, datetime) else datetime.strptime(dt, '%Y%m%d'))
+             .to_list()
+             )
 
         if parallel_args is None:
             parallel_args = dict()
@@ -125,12 +126,11 @@ class BaseLogLoader:
         file_date = self.filepath2date(file_path)
         return self.date_range[0] <= file_date <= self.date_range[1]
 
-    @abstractmethod
     def glob_files(self, base_path):
         # type: (Path) -> Iterable[Path]
         """ 从根路径下，查找所有log文件的Path """
+        return seq(base_path.rglob('*.log'))
 
-    @abstractmethod
     def filepath2date(self, file_path):
         # type: (Path) -> datetime
         """ 每种具体子类对应的日志文件名风格都不同，需要各自的方法提取日期 """

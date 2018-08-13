@@ -15,10 +15,10 @@ from functional import seq
 from pathlib import Path
 from typing import Iterable
 
-from qPyUtils.log.parser.base import BaseLogLoader, logger
+from qPyUtils.log.parser.base import BaseLogParser, logger
 
 
-class SnValiLoader(BaseLogLoader):
+class SnValiLoader(BaseLogParser):
     LOG_TYPE = 'sn_vali'
 
     def glob_files(self, base_path):

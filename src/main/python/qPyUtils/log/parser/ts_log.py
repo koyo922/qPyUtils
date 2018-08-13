@@ -10,10 +10,10 @@ from typing import Iterable, Union
 
 from functional import seq
 
-from qPyUtils.log.parser.base import BaseLogLoader
+from qPyUtils.log.parser.base import BaseLogParser
 
 
-class TsLogLoader(BaseLogLoader):
+class TsLogLoader(BaseLogParser):
     LOG_TYPE = 'ts_log'
 
     def glob_files(self, base_path):

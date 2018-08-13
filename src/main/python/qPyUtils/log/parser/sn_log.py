@@ -10,11 +10,11 @@ from functional import seq
 from pathlib import Path
 from typing import Iterable
 
-from qPyUtils.log.parser.base import BaseLogLoader
+from qPyUtils.log.parser.base import BaseLogParser
 from qPyUtils.text import csplit, dirty_json_or_none
 
 
-class SnLogLoader(BaseLogLoader):
+class SnLogLoader(BaseLogParser):
     LOG_TYPE = 'sn_log'
 
     def glob_files(self, base_path):
