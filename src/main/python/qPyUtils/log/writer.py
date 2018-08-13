@@ -74,6 +74,13 @@ def init_log(log_path, logger_name=None,
     if not os.path.isdir(log_dir):
         os.makedirs(log_dir)
 
+    handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.debug",
+                                                        when=when,
+                                                        backupCount=backup)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
     handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log",
                                                         when=when,
                                                         backupCount=backup)
