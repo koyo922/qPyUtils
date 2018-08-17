@@ -33,7 +33,7 @@ if six.PY3:
 else:
     from chainmap import ChainMap
 
-logger = init_log('./log/analyzer', 'log_loader')
+logger = init_log('./log/log_parser', 'log_parser')
 
 
 @six.add_metaclass(abc.ABCMeta)
