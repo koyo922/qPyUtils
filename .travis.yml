@@ -14,7 +14,8 @@ install:
   - pyb install_dependencies
 
 script:
-  - pyb publish -v && export BUILD_SUCC=1
+#  - pyb publish -v && export BUILD_SUCC=1
+  - fail
 
 deploy:
   provider: script
