@@ -7,9 +7,15 @@ utils for debug
 Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/20 下午10:21
 """
+import os
+import sys
+from contextlib import contextmanager
 from unittest import TestCase
 
-from mockito import unstub
+from mockito import unstub, mock
+from typing import Tuple, Union, Any
+
+from qPyUtils.constant import dummy_fn, T
 
 
 def auto_unstub(test_suite):
@@ -32,3 +38,19 @@ def auto_unstub(test_suite):
 
     test_suite.tearDown = tearDown
     return test_suite
+
+
+@contextmanager
+def mockify(*args, **kwargs):
+    # type: (Iterable[T], Any) -> Union[Tuple[T], T]
+    """
+    mockify multiple args, using specified attrs
+    :param args: the objects to be mockified, usually (stdout, stderr)
+    :param kwargs: the specified behaviour, e.g. dict(write=dummy_fn)
+    :return: mockified version of args
+    """
+    args = [mock(dict(**kwargs)) for _ in args]
+    try:
+        yield args if len(args) > 1 else args[0]
+    finally:
+        unstub()

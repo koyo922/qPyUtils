@@ -1,21 +1,24 @@
 # coding=utf-8
-from typing import List, Callable, Text, Any
-from tqdm import tqdm
+import multiprocessing
 
 # noinspection PyCompatibility
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
+from tqdm import tqdm
+from typing import List, Callable, Text, Any
 
 
 # THANKS: http://danshiebler.com/2016-09-14-parallel-progress-bar/
 
-def para(array, fn, n_jobs=16, use_kwargs=False, front_num=3, pool_type='process', desc=''):
+def para(array, fn, n_jobs=max(1, multiprocessing.cpu_count() - 1),
+         use_kwargs=False, front_num=3, pool_type='process',
+         desc=''):
     # type: (List, Callable, int, bool, int, Text, Text) -> List
     """
         A para version of the map function with a progress bar.
         Args:
             array (array-like): An array to iterate over.
             fn (function): A python function to apply to the elements of array
-            n_jobs (int, default=16): The number of cores to use
+            n_jobs (int, default=n_cores-1): The number of cores to use
             use_kwargs (boolean, default=False): Whether to consider the elements of array as dictionaries of
                 keyword arguments to function
             front_num (int, default=3): The number of iterations to run serially before kicking off the para job.
