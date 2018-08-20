@@ -10,3 +10,4 @@ futures
 typing
 dirtyjson
 filelike
+mockito
