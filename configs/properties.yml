@@ -17,8 +17,11 @@ read_profile_properties_file_mask: 'properties_%s.yml'
 install_dependencies_extra_index_url: 'http://pip.baidu.com/root/baidu/+simple/'
 
 # 测试
+flake8_ignore: 'F401'
 coverage_branch_threshold_warn: 50
 coverage_branch_partial_threshold_warn: 50
+coverage_exceptions:
+  - qPyUtils.log.parser
 
 # 拷贝资源文件到 build产出
 copy_resources_target: "${dir_dist}"
