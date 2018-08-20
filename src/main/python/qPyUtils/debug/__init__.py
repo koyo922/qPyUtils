@@ -25,7 +25,7 @@ def auto_unstub(test_suite):
     def tearDown(self):
         try:
             wrapped_tearDown(self)
-        except:
+        except:  # noqa: E722
             raise
         finally:
             unstub()
