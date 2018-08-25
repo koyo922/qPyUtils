@@ -14,7 +14,7 @@ from mockito import verify, contains, mock
 from pathlib import Path
 
 from qPyUtils.constant import dummy_fn
-from qPyUtils.debug import auto_unstub
+from qPyUtils.debug import auto_unstub, mockify
 from qPyUtils.log import writer
 
 
@@ -23,10 +23,9 @@ class TestInitLog(TestCase):
     log_file_stem = './log/test_logger_init'
 
     def test_easy_path(self):
-        logger = writer.init_log(self.log_file_stem, logger_name=__name__,
-                                 level=logging.INFO, show_logger_src=False,
+        logger = writer.init_log(None, self.log_file_stem, level=logging.INFO, is_show_logger_src=False,
                                  fmt="%(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s",
-                                 datefmt="%m-%d %H:%M:%S")
+                                 datefmt="%m-%d %H:%M:%S", is_writing_console=False)
 
         with Path(self.log_file_stem).with_suffix('.log').open() as f:
             logger.info('test logger')
@@ -45,9 +44,10 @@ class TestInitLog(TestCase):
         ch.setLevel(logging.DEBUG)
         logger.addHandler(ch)
 
-        # add handlers for root logger; catching any specific loggers
-        writer.init_log(self.log_file_stem, show_logger_src=True)
-        # using specific(may be 3rd-party) logger
-        logger.warning('dummy warning')
-        # verify stderr
-        verify(sys.stderr, times=1).write(contains(LOGGER_NAME))
+        with mockify(sys.stderr) as sys.stderr:
+            # add handlers for root logger; catching any specific loggers
+            writer.init_log(LOGGER_NAME, self.log_file_stem, is_show_logger_src=True)
+            # using specific(may be 3rd-party) logger
+            logger.warning('dummy warning')
+            # verify stderr
+            verify(sys.stderr, times=1).write(contains(LOGGER_NAME))
