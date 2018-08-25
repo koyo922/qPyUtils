@@ -2,12 +2,23 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
 from __future__ import unicode_literals
+
+import json
 import re
 
 import six
 from typing import Pattern, Text, Iterable, Tuple
 
 import dirtyjson
+
+
+def is_none_or_empty(s):
+    assert isinstance(s, six.string_types)
+    return s is None or len(s) == 0
+
+
+def dump_utf8(obj, indent=None):
+    return json.dumps(obj, ensure_ascii=False, indent=indent)
 
 
 def csplit(lines, pattern):
