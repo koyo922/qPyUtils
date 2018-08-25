@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
 """
-参考百度编码规范 http://styleguide.baidu.com/style/python/index.html#%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5id9
+referencing Baidu coding style http://styleguide.baidu.com/style/python/index.html#%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5id9
 
 Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/10 下午4:29
@@ -19,20 +19,21 @@ class _BelowWarningFilter(logging.Filter):
 
 
 # noinspection PyIncorrectDocstring
-def init_log(log_path, logger_name=None,
-             level=logging.INFO, when="D", backup=365, to_console=True, show_logger_src=False,
+def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", backup=365,
+             is_writing_console=True, is_show_logger_src=False,
              fmt="%(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
     """
     init_log - initialize log module
 
     Args:
-      log_path      - Log file path prefix.
-                      Log data will go to two files: log_path.log and log_path.log.wf
-                      Any non-exist parent directories will be created automatically
       logger_name   - name of the logger to get, if None, return root logger
                       default value: None
                       Any non-exist parent directories will be created automatically
+      log_path      - Log file path prefix.
+                      Log data will go to two files: log_path.log and log_path.log.wf
+                      Any non-exist parent directories will be created automatically
+                      the default value is None, meaning no files needed
       level         - msg above the level will be displayed in *.log(always WARN for *.log.wf, DEBUG for stdout)
                       DEBUG < INFO < WARNING < ERROR < CRITICAL
                       the default value is logging.INFO
@@ -47,7 +48,7 @@ def init_log(log_path, logger_name=None,
                       default value: 365
       to_console    - whether always write to console
                       default value: True
-      show_logger_src
+      is_show_logger_src
                     - show name and path for all loggers, including 3rd-party library,
                       used for debugging and silence those unwanted
                       default value: False
@@ -55,6 +56,7 @@ def init_log(log_path, logger_name=None,
                       default format:
                       %(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s
                       > INFO: 12-09 18:02:42: log.py:40 * 139814749787872 HELLO WORLD
+      datefmt       - format for the datetime part in ``fmt``
 
     Return:
         logging.Logger: the logger object
@@ -63,39 +65,46 @@ def init_log(log_path, logger_name=None,
         OSError: fail to create log directories
         IOError: fail to open log file
     """
-    if show_logger_src:
+    # check params
+    is_writing_files = not (log_path is None or log_path == '')
+    assert is_writing_files or is_writing_console, 'Neither writing to files or console, useless logger'
+
+    # config the logger
+    if is_show_logger_src:
         fmt = fmt.replace('%(filename)s:%(lineno)d', '[%(name)s@%(pathname)s]%(filename)s:%(lineno)d')
     formatter = logging.Formatter(fmt, datefmt)
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
-    del logger.handlers[:]
 
-    log_dir = os.path.dirname(log_path)
-    if not os.path.isdir(log_dir):
-        os.makedirs(log_dir)
+    # config handlers for files
+    if is_writing_files:
+        log_dir = os.path.dirname(log_path)
+        if not os.path.isdir(log_dir):
+            os.makedirs(log_dir)
 
-    handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.debug",
-                                                        when=when,
-                                                        backupCount=backup)
-    handler.setLevel(logging.DEBUG)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+        handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.debug",
+                                                            when=when,
+                                                            backupCount=backup)
+        handler.setLevel(logging.DEBUG)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
-    handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log",
-                                                        when=when,
-                                                        backupCount=backup)
-    handler.setLevel(level)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+        handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log",
+                                                            when=when,
+                                                            backupCount=backup)
+        handler.setLevel(level)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
-    handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.wf",
-                                                        when=when,
-                                                        backupCount=backup)
-    handler.setLevel(logging.WARNING)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+        handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.wf",
+                                                            when=when,
+                                                            backupCount=backup)
+        handler.setLevel(logging.WARNING)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
-    if to_console:
+    # config handlers for console
+    if is_writing_console:
         handler_stdout = logging.StreamHandler(sys.stdout)
         handler_stdout.setLevel(logging.DEBUG)
         handler_stdout.addFilter(_BelowWarningFilter())  # 低于WARNING的打到 stdout
@@ -107,4 +116,5 @@ def init_log(log_path, logger_name=None,
         handler_stderr.setFormatter(formatter)
         logger.addHandler(handler_stderr)
 
+    # return the logger
     return logger
