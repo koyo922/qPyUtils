@@ -24,8 +24,9 @@ deploy:
   provider: script
   skip_cleanup: true
   on:
+    python: '2.7' # avoid uploading from multiple versions, conflict
     branches:
       only:
         - master
-#        - /^release-.*$/
+        - /^release.*$/
   script: pyb upload -v
