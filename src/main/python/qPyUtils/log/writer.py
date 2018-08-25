@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
 """
-referencing Baidu coding style http://styleguide.baidu.com/style/python/index.html#%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5id9
+referencing Baidu coding style
+http://styleguide.baidu.com/style/python/index.html#编程实践id9
 
 Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/10 下午4:29
