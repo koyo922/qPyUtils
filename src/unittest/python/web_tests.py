@@ -35,11 +35,13 @@ class TestWeb(TestCase):
                 mock_server_thread.start()  # automatically stopped when unittest finish
 
             # make a request from the client
-            response = requests.post('http://localhost:8004',
-                                     data={'name': 'koyo', 'friends': ['tsuga', 'Uncle.Li', '肉饼']})
-
+            response_post = requests.post('http://localhost:8004',
+                                          data={'name': 'koyo', 'friends': ['tsuga', 'Uncle.Li', '肉饼']})
+            response_get = requests.get('http://localhost:8004',
+                                        data={'name': 'koyo', 'friends': ['tsuga', 'Uncle.Li', '肉饼']})
             # assert correct response on client side
-            self.assertEqual('KOYO has friends: tsuga, Uncle.Li, 肉饼', response.text)
+            self.assertEqual('KOYO has friends: tsuga, Uncle.Li, 肉饼', response_post.text)
+            self.assertEqual('KOYO has friends: tsuga, Uncle.Li, 肉饼', response_get.text)
 
             # assert correct logging on server side
             # tried to use mockito.matchers.match(...); but found a bug for treating type unicode as not match
