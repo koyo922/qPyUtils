@@ -2,12 +2,22 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
 from __future__ import unicode_literals
+
+import json
 import re
 
 import six
 from typing import Pattern, Text, Iterable, Tuple
 
 import dirtyjson
+
+
+def is_none_or_empty(s):  # pragma: no cover
+    return s is None or len(s) == 0
+
+
+def dump_utf8(obj, indent=None):
+    return json.dumps(obj, ensure_ascii=False, indent=indent)
 
 
 def csplit(lines, pattern):
@@ -18,18 +28,18 @@ def csplit(lines, pattern):
     :param pattern: 正则pattern对象 或者 相应的文本
     :return:
     """
-    buffer = []
+    buffer_lines = []
     if isinstance(pattern, six.string_types):
         pattern = re.compile(r'.*{}.*'.format(pattern))
     for line in lines:
         if pattern.match(line):
-            if buffer:
-                yield tuple(buffer)
-            del buffer[:]
-        buffer.append(line)
+            if buffer_lines:
+                yield tuple(buffer_lines)
+            del buffer_lines[:]
+        buffer_lines.append(line)
 
-    if buffer:
-        yield tuple(buffer)
+    if buffer_lines:
+        yield tuple(buffer_lines)
 
 
 def dirty_json_or_none(text):

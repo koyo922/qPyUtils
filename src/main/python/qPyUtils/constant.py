@@ -8,7 +8,7 @@ Date:    2018/8/13 上午11:36
 
 import sys
 
-from typing import TypeVar
+from typing import TypeVar, Any
 
 INF = sys.maxsize
 
@@ -35,3 +35,9 @@ def identity_fn(arg):
     :return:
     """
     return arg
+
+
+# noinspection PyUnusedLocal
+def true_fn(*args, **kwargs):
+    # type: (Any, Any) -> True
+    return True
