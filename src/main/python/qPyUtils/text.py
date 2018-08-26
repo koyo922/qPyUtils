@@ -12,8 +12,7 @@ from typing import Pattern, Text, Iterable, Tuple
 import dirtyjson
 
 
-def is_none_or_empty(s):
-    assert isinstance(s, six.string_types)
+def is_none_or_empty(s):  # pragma: no cover
     return s is None or len(s) == 0
 
 
@@ -29,18 +28,18 @@ def csplit(lines, pattern):
     :param pattern: 正则pattern对象 或者 相应的文本
     :return:
     """
-    buffer = []
+    buffer_lines = []
     if isinstance(pattern, six.string_types):
         pattern = re.compile(r'.*{}.*'.format(pattern))
     for line in lines:
         if pattern.match(line):
-            if buffer:
-                yield tuple(buffer)
-            del buffer[:]
-        buffer.append(line)
+            if buffer_lines:
+                yield tuple(buffer_lines)
+            del buffer_lines[:]
+        buffer_lines.append(line)
 
-    if buffer:
-        yield tuple(buffer)
+    if buffer_lines:
+        yield tuple(buffer_lines)
 
 
 def dirty_json_or_none(text):

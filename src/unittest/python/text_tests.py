@@ -32,10 +32,16 @@ class TestText(TestCase):
             '---- line5',
             'line6'
         ]
+        # string case: empty last buffer
+        self.assertEqual([], list(csplit([], r'----')))
 
         # string case
         self.assertEqual([('line1',), ('---- line2', 'line3', 'line4'), ('---- line5', 'line6')],
                          list(csplit(lines, r'----')))
+
+        # string case: empty first buffer
+        self.assertEqual([('---- line2', 'line3', 'line4'), ('---- line5', 'line6')],
+                         list(csplit(lines[1:], r'----')))
 
         # regex case
         self.assertEqual([('line1', '---- line2'), ('line3', 'line4', '---- line5'), ('line6',)],
