@@ -28,5 +28,6 @@ deploy:
     branches:
       only:
         - master
+        - release
         - /^release.*$/
   script: pyb upload -v
