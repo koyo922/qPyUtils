@@ -21,7 +21,7 @@ class _BelowWarningFilter(logging.Filter):
 
 # noinspection PyIncorrectDocstring
 def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", backup=365,
-             is_writing_console=True, is_show_logger_src=False,
+             is_writing_console=True, is_show_logger_src=False, is_propagate=False,
              fmt="%(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
     """
@@ -53,6 +53,8 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
                     - show name and path for all loggers, including 3rd-party library,
                       used for debugging and silence those unwanted
                       default value: False
+      is_propagate  - whether propagate to parent logger
+                      default value: False
       fmt           - format of the log
                       default format:
                       %(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s
@@ -75,6 +77,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
         fmt = fmt.replace('%(filename)s:%(lineno)d', '[%(name)s@%(pathname)s]%(filename)s:%(lineno)d')
     formatter = logging.Formatter(fmt, datefmt)
     logger = logging.getLogger(logger_name)
+    logger.propagate = is_propagate
     logger.setLevel(logging.DEBUG)
 
     # config handlers for files
