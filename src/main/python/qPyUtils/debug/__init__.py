@@ -15,29 +15,29 @@ from unittest import TestCase
 from mockito import unstub, mock
 from typing import Tuple, Union, Any
 
-from qPyUtils.constant import dummy_fn, T
+from qPyUtils.constant import dummy_fn, T, true_fn
 
 
-def auto_unstub(test_suite):
+def auto_unstub(testcase):
     # type: (TestCase) -> TestCase
     """
     decorator for TestCase, adding ability to auto unstub mockito
     thanks: https://gist.github.com/jnape/5767029
-    :param test_suite:
+    :param testcase:
     :return:
     """
-    wrapped_tearDown = test_suite.tearDown if 'tearDown' in dir(test_suite) else lambda self: True
+    wrapped_tearDown = testcase.tearDown
 
-    def tearDown(self):
+    def newTeardown(self):
         try:
             wrapped_tearDown(self)
-        except:  # noqa: E722
+        except:  # noqa: E722  # pragma: no cover
             raise
         finally:
             unstub()
 
-    test_suite.tearDown = tearDown
-    return test_suite
+    testcase.tearDown = newTeardown
+    return testcase
 
 
 @contextmanager
