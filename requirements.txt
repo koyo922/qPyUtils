@@ -6,8 +6,10 @@ chainmap
 pyfunctional
 fn
 tqdm
-futures
+futures; python_version < "3"
 typing
 dirtyjson
 filelike
 mockito
+tornado
+requests

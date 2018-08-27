@@ -12,15 +12,21 @@ from __future__ import unicode_literals
 
 import socket
 import warnings
+from typing import Text, Callable, Any
 
 import six
 import tornado.ioloop
 import tornado.web
-from typing import Text, Callable, Any
 
 from qPyUtils import logger
 from qPyUtils.streaming import try_flatten
-from qPyUtils.text import dump_utf8
+from qPyUtils.text import dump_utf8, ensure_text
+
+if six.PY3:  # pragma: no cover
+    import asyncio
+    from tornado.platform.asyncio import AnyThreadEventLoopPolicy
+
+    asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
 
 
 class RESTful(object):
@@ -70,7 +76,7 @@ class RESTful(object):
                 request_kwargs = this.request.arguments
                 # if param 'name' was only defined once,
                 # then flatten the corresponding value(a size==1 list) into a scalar
-                request_kwargs = {six.text_type(k, 'utf8'): try_flatten([six.text_type(arg, 'utf8') for arg in v])
+                request_kwargs = {ensure_text(k): try_flatten([ensure_text(arg) for arg in v])
                                   for k, v in six.iteritems(request_kwargs)}
                 logger.info('----- got request_param: %s', dump_utf8(request_kwargs))
                 this.write(fn(**request_kwargs))

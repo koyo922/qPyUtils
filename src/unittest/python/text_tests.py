@@ -4,7 +4,7 @@
 import re
 from unittest import TestCase
 
-from qPyUtils.text import csplit, dirty_json_or_none, malformed_json_text
+from qPyUtils.text import csplit, dirty_json_or_none, malformed_json_text, ensure_text
 
 
 class TestText(TestCase):
@@ -46,3 +46,12 @@ class TestText(TestCase):
         # regex case
         self.assertEqual([('line1', '---- line2'), ('line3', 'line4', '---- line5'), ('line6',)],
                          list(csplit(lines, re.compile(r'line[36].*'))))
+
+    def test_ensure_text(self):
+        self.assertEqual(None, ensure_text(None))
+        self.assertEqual(u'', ensure_text(b''))
+        self.assertEqual(u'', ensure_text(u''))
+        self.assertEqual(u'abc', ensure_text(b'abc'))
+        self.assertEqual(u'abc', ensure_text(u'abc'))
+        with self.assertRaises(AssertionError):
+            ensure_text([])
