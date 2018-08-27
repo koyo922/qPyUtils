@@ -171,3 +171,4 @@ venv.bak/
 
 .idea/
 !/src/main/scripts/
+*.log.*

@@ -23,6 +23,7 @@ import pandas.errors
 # noinspection PyPackageRequirements
 from functional import seq
 
+from qPyUtils import logger
 from qPyUtils.log.writer import init_log
 from qPyUtils.constant import INF
 from qPyUtils.parallel import para
@@ -32,8 +33,6 @@ if six.PY3:
     from collections import ChainMap
 else:
     from chainmap import ChainMap
-
-logger = init_log('./log/log_parser', 'log_parser')
 
 
 @six.add_metaclass(abc.ABCMeta)
