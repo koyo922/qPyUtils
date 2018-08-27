@@ -52,4 +52,14 @@ def dirty_json_or_none(text):
         return None
 
 
+def ensure_text(text, encoding='utf8'):
+    if text is None:
+        return None
+    if isinstance(text, Text):
+        return text
+    if isinstance(text, six.binary_type):
+        return six.text_type(text, encoding)
+    raise AssertionError('unexpected arg type:{}'.format(type(text)))
+
+
 malformed_json_text = []
