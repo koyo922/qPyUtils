@@ -7,15 +7,13 @@ utils for debug
 Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/20 下午10:21
 """
-import os
-import sys
 from contextlib import contextmanager
+from typing import Tuple, Union, Any
 from unittest import TestCase
 
 from mockito import unstub, mock
-from typing import Tuple, Union, Any
 
-from qPyUtils.constant import dummy_fn, T, true_fn
+from qPyUtils.constant import T
 
 
 def auto_unstub(testcase):
