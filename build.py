@@ -30,7 +30,7 @@ name = 'qPyUtils'
 authors = [Author('Qian Weishuo ', 'qzy922@gmail.com'), ]
 license = 'MIT License'
 url = 'https://github.com/koyo922/qPyUtils'
-version = '0.1.2'
+version = '0.1.3'
 
 
 @init
