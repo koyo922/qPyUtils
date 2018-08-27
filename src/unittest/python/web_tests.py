@@ -8,6 +8,7 @@ Date:    2018/8/25 下午11:21
 from __future__ import unicode_literals
 
 import json
+import time
 import warnings
 from threading import Thread
 from unittest import TestCase
@@ -35,6 +36,7 @@ class TestWeb(TestCase):
                 mock_server_thread.start()  # automatically stopped when unittest finish
 
             # make a request from the client
+            time.sleep(0.5)  # sleep 0.5 second
             response_post = requests.post('http://localhost:8004',
                                           data={'name': 'koyo', 'friends': ['tsuga', 'Uncle.Li', '肉饼']})
             response_get = requests.get('http://localhost:8004',
