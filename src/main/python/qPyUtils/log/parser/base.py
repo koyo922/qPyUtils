@@ -75,7 +75,7 @@ class BaseLogParser:
         assert base_path is not None and base_path.is_dir()
         # 扫描得到所有待处理的文件Path
         # noinspection PyUnresolvedReferences
-        logfile_paths = (self.glob_files(base_path)
+        logfile_paths = (seq(self.glob_files(base_path))
                          .filter(self.is_in_daterange)
                          .sorted()
                          .take(self.take_files)
@@ -101,7 +101,7 @@ class BaseLogParser:
         assert path.is_file()
         # 下面的逻辑写得有点复杂，因为sn_log中\n没有转义，导致有些行需要join起来才是完整记录
         # noinspection PyUnresolvedReferences
-        df = (self.logfile2blocks(path)  # 抽取得到stream of block（就是str）
+        df = (seq(self.logfile2blocks(path))  # 抽取得到stream of block（就是str）
               .filter(None)  # 过滤掉空的block
               .map(self.block2records)
               .flatten()  # 每个block可能对应一至多条记录
