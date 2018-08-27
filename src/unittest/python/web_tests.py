@@ -36,7 +36,7 @@ class TestWeb(TestCase):
                 mock_server_thread.start()  # automatically stopped when unittest finish
 
             # make a request from the client
-            time.sleep(0.5)  # sleep 0.5 second
+            time.sleep(0.2)  # waiting server to start, critical for Travis-CI
             response_post = requests.post('http://localhost:8004',
                                           data={'name': 'koyo', 'friends': ['tsuga', 'Uncle.Li', '肉饼']})
             response_get = requests.get('http://localhost:8004',

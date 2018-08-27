@@ -6,7 +6,7 @@ chainmap
 pyfunctional
 fn
 tqdm
-futures; python_version < '3'
+futures; python_version < "3"
 typing
 dirtyjson
 filelike
