@@ -52,3 +52,6 @@ def mockify(*args, **kwargs):
         yield args if len(args) > 1 else args[0]
     finally:
         unstub()
+
+
+is_debugging = 'pydevd' in sys.modules or os.environ.get('DEBUG') == '1'
