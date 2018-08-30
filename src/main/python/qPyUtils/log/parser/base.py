@@ -23,7 +23,6 @@ import pandas.errors
 # noinspection PyPackageRequirements
 from functional import seq
 
-from qPyUtils import logger
 from qPyUtils.log.writer import init_log
 from qPyUtils.constant import INF
 from qPyUtils.parallel import para
@@ -33,6 +32,8 @@ if six.PY3:
     from collections import ChainMap
 else:
     from chainmap import ChainMap
+
+logger = init_log(__name__)
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -60,8 +61,7 @@ class BaseLogParser:
 
         if parallel_args is None:
             parallel_args = dict()
-        self.parallel_args = ChainMap(parallel_args,
-                                      dict(n_jobs=10, front_num=1, pool_type='thread', desc=self.LOG_TYPE))
+        self.parallel_args = ChainMap(parallel_args, dict(front_num=1, pool_type='thread'))
 
     def load_dir(self, base_path):
         # type: (Union[Path, Text]) -> pd.DataFrame
