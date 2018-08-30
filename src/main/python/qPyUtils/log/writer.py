@@ -110,7 +110,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
     # config handlers for console
     if is_writing_console:
         handler_stdout = logging.StreamHandler(sys.stdout)
-        handler_stdout.setLevel(logging.DEBUG)
+        handler_stdout.setLevel(level)
         handler_stdout.addFilter(_BelowWarningFilter())  # 低于WARNING的打到 stdout
         handler_stdout.setFormatter(formatter)
         logger.addHandler(handler_stdout)
