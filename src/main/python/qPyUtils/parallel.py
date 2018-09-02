@@ -62,3 +62,6 @@ def para(array, fn, n_jobs=max(1, multiprocessing.cpu_count() - 1),
         except Exception as e:
             out.append(e)
     return front + out
+
+
+pmap = para
