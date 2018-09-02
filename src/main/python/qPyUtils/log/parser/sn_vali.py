@@ -7,6 +7,7 @@ sn_validate 类型的日志解析器
 Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/4 下午6:09
 """
+from __future__ import unicode_literals
 from datetime import datetime
 
 import filelike
@@ -40,6 +41,6 @@ class SnValiLoader(BaseLogParser):
         assert path.is_file()
         with filelike.wrappers.Translate(path.open(mode='rt', encoding='utf8'),
                                          rfunc=lambda x: x.replace('\n\\n', '')) as f:
-            df = pd.read_csv(f, dtype={'label2': int}, sep='\t', nrows=self.take_head)
+            df = pd.read_csv(f, dtype={'label2': int}, sep='\t', nrows=self.take_head, encoding='utf8')
         logger.info('---------- done loading[%s]: %s', self.LOG_TYPE, path.as_posix())
         return df
