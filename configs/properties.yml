@@ -22,6 +22,10 @@ coverage_branch_threshold_warn: 50
 coverage_branch_partial_threshold_warn: 50
 coverage_exceptions:
   - qPyUtils.log.parser
+  - qPyUtils.log.parser.base
+  - qPyUtils.log.parser.sn_log
+  - qPyUtils.log.parser.ts_log
+  - qPyUtils.log.parser.sn_vali
 
 # 拷贝资源文件到 build产出
 copy_resources_target: "${dir_dist}"
