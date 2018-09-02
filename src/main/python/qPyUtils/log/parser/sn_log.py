@@ -28,7 +28,7 @@ class SnLogLoader(BaseLogParser):
     def logfile2blocks(self, path):
         # type: (Path) -> Iterable[Text]
         with path.open(mode='rt', encoding='utf8') as lines:
-            return seq(csplit(lines, re.compile(r'^{"vers'))).map(''.join)
+            return seq(csplit(lines, re.compile(r'^{"vers'))).map(''.join).cache()  # 注意缓存，否则文件关闭后流也失效
 
     def block2records(self, block):
         # type: (Text) -> Iterable[dict]
@@ -40,4 +40,5 @@ class SnLogLoader(BaseLogParser):
                            .filter(X[0] != 'records')
                            .to_dict())
             for rec in j['records']:
-                yield dict(**rec) | dict(**other_attrs)
+                rec.update(other_attrs)
+                yield rec

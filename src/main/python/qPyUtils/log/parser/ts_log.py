@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 expandtab number
-
+from __future__ import unicode_literals
 import json
 import re
 from datetime import datetime
 
 from functional import seq
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Text
 
 from qPyUtils.log.parser.base import BaseLogParser
 
@@ -35,22 +35,14 @@ class TsLogLoader(BaseLogParser):
         :param block:
         :return:
         """
-        mat = _REGEX_TS_LINE.fullmatch(block.rstrip())
+        mat = _REGEX_TS_LINE.match(block.strip())
         if mat is None:
             malformed_ts_line.append(block)
             yield None
             return
 
         log_time, brackets_str, _ = mat.groups()
-        # e.g. ts_line = NOTICE: 06-30 23:58:01:  ts * 5140 .../speech-arch/ts-ex/ts_context.cpp:1042] [
-        # logid:912070234][err:0][pkg_num:0][pdid:1001][appname:com.adamrocker.android.input.simeji][sample:16000][
-        # client:8F668491-C598-5B7F-19AA-009D67D9B801][cpid:6572907471162369287][cplen:14804][wcpid:0][
-        # workTime:4472][waitTime:475][proxy_ip:10.252.24.52:39861][prop:10005][client_ip:175.135.229.220][
-        # sn:df7f97e7-178b-4e42-9aab-1d288846add6][total_decode_time:2068, last_pack:322][realtime_log:{
-        # "app_version":"12.4.2","system_version":24,"os":"android","app":"com.dena.mirrativ","input_type":1,
-        # "input_action":4}][TaskRecognition, timecost:4358, wait_finish:361, recv_audio:3264, connect: 4,
-        # decoder:10.252.12.42:8001, failed: , recog_text:めぐにも入れちゃっていって][TaskWordCorrection, timecost:113, wc_err:0,
-        # wc_svr: 10.252.21.33:8990, wc_result: めぐにも入れちゃっていって, proc_type: 2, post_data_len: 4416]
+        # e.g. ts_line = NOTICE: 06-30 23:58:01:  ts * 5140 ...post_data_len: 4416]
         # 使用_REGEX_TS_LINE正则，配出三段 _REGEX_TS_LINE = re.compile(r"""^NOTICE: ([-\d :]+?):  ts \* \d+ \S+ ((\[
         # .+?\])+)$""")
         #
@@ -79,7 +71,7 @@ class TsLogLoader(BaseLogParser):
                 # timecost:4358
                 # realtime_log:{"app_version":"12.4.2", ...}
                 # wc_svr: 10.252.21.33:8990
-                part_k, part_v = seq(part.split(':', maxsplit=1)).map(str.strip)
+                part_k, part_v = seq(part.split(':', 1)).map(Text.strip)
 
                 key_path.append(part_k)  # --- 加part前缀
                 if part_v.startswith('{'):
