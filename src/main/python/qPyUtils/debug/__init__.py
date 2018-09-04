@@ -7,7 +7,11 @@ utils for debug
 Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/20 下午10:21
 """
+import os
+import sys
 from contextlib import contextmanager
+from threading import Thread
+
 from typing import Tuple, Union, Any
 from unittest import TestCase
 
@@ -52,3 +56,21 @@ def mockify(*args, **kwargs):
         yield args if len(args) > 1 else args[0]
     finally:
         unstub()
+
+
+is_debugging = 'pydevd' in sys.modules or os.environ.get('DEBUG') == '1'
+
+
+def start_in_thread(fn, *args, **kwargs):
+    """
+    start a new thread to run the specified job;
+    CAUTION: do not use the `_thread` module, which is not covered by coverage.py
+    # _thread.start_new_thread( introduce.__setattr__() , tuple())
+    :param fn:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    thread = Thread(target=fn, args=args, kwargs=kwargs)
+    thread.setDaemon(True)
+    thread.start()  # might automatically stop when unittest finish

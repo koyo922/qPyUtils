@@ -23,7 +23,6 @@ import pandas.errors
 # noinspection PyPackageRequirements
 from functional import seq
 
-from qPyUtils import logger
 from qPyUtils.log.writer import init_log
 from qPyUtils.constant import INF
 from qPyUtils.parallel import para
@@ -33,6 +32,8 @@ if six.PY3:
     from collections import ChainMap
 else:
     from chainmap import ChainMap
+
+logger = init_log(__name__)
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -60,10 +61,9 @@ class BaseLogParser:
 
         if parallel_args is None:
             parallel_args = dict()
-        self.parallel_args = ChainMap(parallel_args,
-                                      dict(n_jobs=10, front_num=1, pool_type='thread', desc=self.LOG_TYPE))
+        self.parallel_args = ChainMap(parallel_args, dict(front_num=1, pool_type='thread'))
 
-    def load_dir(self, base_path):
+    def load_dir(self, base_path):  # pragma: no cover
         # type: (Union[Path, Text]) -> pd.DataFrame
         """
         从指定的目录下，加载若干个符合条件的log文件，并将得到的结果pd.concat到一起
@@ -133,6 +133,7 @@ class BaseLogParser:
     def filepath2date(self, file_path):
         # type: (Path) -> datetime
         """ 每种具体子类对应的日志文件名风格都不同，需要各自的方法提取日期 """
+        raise NotImplemented
 
     @abstractmethod
     def logfile2blocks(self, path):

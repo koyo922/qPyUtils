@@ -10,14 +10,13 @@ from __future__ import unicode_literals
 import json
 import time
 import warnings
-from threading import Thread
 from unittest import TestCase
 
 import requests
 from mockito import when
 
 import qPyUtils.web
-from qPyUtils.debug import mockify
+from qPyUtils.debug import mockify, start_in_thread
 from qPyUtils.web import RESTful
 
 
@@ -31,9 +30,7 @@ class TestWeb(TestCase):
                 def introduce(name, friends):
                     return '{} has friends: {}'.format(name.upper(), ', '.join(friends))
 
-                mock_server_thread = Thread(target=introduce.serve)
-                mock_server_thread.setDaemon(True)
-                mock_server_thread.start()  # automatically stopped when unittest finish
+                start_in_thread(introduce.serve)
 
             # make a request from the client
             time.sleep(0.2)  # waiting server to start, critical for Travis-CI

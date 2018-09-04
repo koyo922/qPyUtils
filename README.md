@@ -22,18 +22,26 @@ Just open and use, intuitively as the following examples:
 
 ### Debuging / Testing
 
-- Automatically unstub mockito patch/mocks
-- a context protocol for modifying one or more objects
+- `start_in_thread(fn, *args, **kwargs)` single line to run a function in background thread
+- `auto_unstub()` Automatically unstub mockito patch/mocks
+- `mockify`a context protocol for modifying one or more objects
 
 ```python
-from qPyUtils.debug import auto_unstub, mockify
+from qPyUtils.debug import auto_unstub, mockify, start_in_thread
 
+# ---------- start_in_thread
+start_in_thread(function_to_start_a_web_server, host='localhost', port=8011)
+time.sleep(0.1)  # waiting server to start, critical for Travis-CI
+assert requests.get('http://localhost:8011/...') == ...
+
+# ---------- auto_unstub
 @auto_unstub  # `mockito.unstub()` is inserted into `tearDown()` logic
 class TestInitLog(TestCase):
     def test_method(self):
         ... # code that may use mockito
         
     def test_method2(self):
+        # ---------- mockify
         with mockify(sys.stderr) as sys.stderr:  # temporarily suppress stderr
             ...  # code that calls `sys.stderr.write()`
             verify(sys.stderr, atleast=1).write(Ellipsis)
@@ -184,6 +192,32 @@ def introduce(name, friends):
 # Unicode is automatically translated by UTF8
 $ curl 'http://localhost:8004?name=koyo' -d 'friends=solar' -d 'friends=ape' -d 'friends=tutor' -d 'friends=斑马'
 KOYO has friends: solar, ape, tutor, 斑马%
+```
+
+### System utils
+
+A command line tool for forwarding port(s); Unicode Domain-Name is also supported.
+
+```bash
+# ----- ensure the PYTHON_BIN is in PATH
+PYTHON_BIN=$(python -c 'from distutils.sysconfig import EXEC_PREFIX as p; print(p + "/bin")')
+export PATH=${PYTHON_BIN}:$PATH
+portforward -H www.pku-hall.com -p 80 -l 8011
+
+# ----- OR just call by `python -m ...`
+python -m qPyUtils.system.portforward -H www.pku-hall.com -p 80 -l 8011
+```
+
+```commandline
+Usage:
+  portforward (-c <conf_path> | -H <host> -p <port> -l <local_port>)
+  portforward -h | --help
+
+Demo conf file:
+<host>	<port>	<local_port>
+www.pku-hall.com	80	8011
+www.nic.ad.jp	80	8012
+中国互联网络信息中心.中国	80	8013
 ```
 
 ### Prerequisites
