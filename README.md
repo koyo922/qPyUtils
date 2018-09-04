@@ -179,12 +179,16 @@ u'中文'
 One-liner annotation turns your function into a RESTful service
 
 ```python
-# ----- server side
+# ----- server side (CAUTION: UNICODE_LITERALS OR u'...' IS NECESSARY FOR NON-ASCII REQUESTS)
+# encoding: utf-8
+from __future__ import unicode_literals
 from qPyUtils.web import RESTful
 
 @RESTful(port=8004, route='/')
 def introduce(name, friends):
     return '{} has friends: {}'.format(name.upper(), ', '.join(friends))
+    
+introduce.serve()
 ```
 
 ```bash
@@ -199,12 +203,12 @@ KOYO has friends: solar, ape, tutor, 斑马%
 A command line tool for forwarding port(s); Unicode Domain-Name is also supported.
 
 ```bash
-# ----- ensure the PYTHON_BIN is in PATH
+# ----- ensure PYTHON_BIN is in the PATH; consider adding it to ~/.bashrc
 PYTHON_BIN=$(python -c 'from distutils.sysconfig import EXEC_PREFIX as p; print(p + "/bin")')
 export PATH=${PYTHON_BIN}:$PATH
 portforward -H www.pku-hall.com -p 80 -l 8011
 
-# ----- OR just call by `python -m ...`
+# ----- OR just simply call by `python -m ...` as an ad-hoc solution
 python -m qPyUtils.system.portforward -H www.pku-hall.com -p 80 -l 8011
 ```
 
@@ -268,7 +272,7 @@ See also the list of [contributors](https://github.com/koyo922/qPyUtils/contribu
 
 ## License
 
-This project is licensed under the MIT License - 
+This project is licensed under the MIT License 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 

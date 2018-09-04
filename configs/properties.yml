@@ -37,7 +37,7 @@ copy_resources_glob:
 filter_resources_glob: ['**/*.py']
 
 # 从README.md中提取供PyPI使用的 summary和description
-distutils_readme_description: true
+distutils_readme_description: false
 distutils_description_overwrite: true
 
 # 上传(使用~/.pypirc中的配置)
