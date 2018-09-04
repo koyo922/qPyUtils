@@ -13,3 +13,4 @@ filelike
 mockito
 tornado
 requests
+docopt
