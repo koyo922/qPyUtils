@@ -22,6 +22,7 @@ from __future__ import unicode_literals, print_function
 
 import socket
 import time
+import warnings
 from io import open
 
 import docopt
@@ -109,6 +110,9 @@ def main(args_in=None):
 
 
 if __name__ == '__main__':  # pragma: no cover
+    warnings.warn('IT IS DANGEROUS TO FORWARD AN INTERNAL PORT TO AN OPEN-ACCESSIBLE ONE, '
+                  'PLEASE KILL/EXIT IT WHEN YOU FINISH USING !!', UserWarning)
+
     if is_debugging:
         main(['-H', '中国互联网络信息中心.中国', '-p', '80', '-l', '8004'])
     main()
