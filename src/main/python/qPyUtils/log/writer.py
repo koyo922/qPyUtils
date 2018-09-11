@@ -22,7 +22,7 @@ class _BelowWarningFilter(logging.Filter):
 # noinspection PyIncorrectDocstring
 def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", backup=365,
              is_writing_console=True, is_show_logger_src=False, is_propagate=False,
-             fmt="%(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s",
+             fmt="%(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
     """
     init_log - initialize log module
@@ -57,8 +57,8 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
                       default value: False
       fmt           - format of the log
                       default format:
-                      %(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s
-                      > INFO: 12-09 18:02:42: log.py:40 * 139814749787872 HELLO WORLD
+                      %(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s
+                      > INFO: 12-09 18:02:42.025: log.py:40 * 139814749787872 HELLO WORLD
       datefmt       - format for the datetime part in ``fmt``
 
     Return:
