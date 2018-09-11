@@ -224,6 +224,15 @@ www.nic.ad.jp	80	8012
 中国互联网络信息中心.中国	80	8013
 ```
 
+A function simulating `rm -f <path>`
+- support both dir and file
+- ignore_errors, if not exist
+
+```python
+from qPyUtils.system.file_system import rm
+rm('path/to/your/dir/or/file', ignore_errors=True)
+```
+
 ### Prerequisites
 
 - A *NIX OS
