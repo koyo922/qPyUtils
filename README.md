@@ -104,6 +104,32 @@ logger = init_log()
 logger = init_log(is_writing_console=False, log_path='./log/my_log_file')
 ```
 
+### `Timer` as a context manager
+
+```python
+import time
+import qPyUtils.log.timer
+
+# user-defined output_fn; feel free to try using `output_fn=logger.info` etc.
+>>> res = []
+>>> with qPyUtils.log.timer.Timer('Long task 中文', output_fn=res.append) as timer:
+>>> ... with timer.child('large step'):
+>>> ...     time.sleep(1)
+>>> ... for _ in range(5):
+>>> ...     with timer.child('small step'):
+>>> ...         time.sleep(0.5)
+>>> ... print(res[0])
+>>> ...
+Long task 中文: 3.506s
+  5x small step: 2.503s (71%)
+  1x large step: 1.001s (28%)
+
+# user-defined format_string
+>>> with qPyUtils.log.timer.Timer('Long task 中文', fmt='{name} --> {elapsed:.3f}') as timer:
+>>> ... time.sleep(0.1)
+Long task 中文 --> 0.101s
+```
+
 ### Constant variables and functions
 
 - `dummy_fn(*args, **kwargs)`: accepts anything but does nothing
@@ -290,3 +316,4 @@ This project is licensed under the MIT License
 * `debug.auto_unstub()` https://gist.github.com/jnape/5767029
 * `log.writer()` http://styleguide.baidu.com/style/python/index.html
 * `text.dirty_json_or_none()` https://github.com/codecobblers/dirtyjson
+* `log.timer.Timer()` https://github.com/mherrmann/timer-cm
