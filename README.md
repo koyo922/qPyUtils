@@ -111,23 +111,24 @@ import time
 import qPyUtils.log.timer
 
 # user-defined output_fn; feel free to try using `output_fn=logger.info` etc.
->>> res = []
->>> with qPyUtils.log.timer.Timer('Long task 中文', output_fn=res.append) as timer:
->>> ... with timer.child('large step'):
->>> ...     time.sleep(1)
->>> ... for _ in range(5):
->>> ...     with timer.child('small step'):
->>> ...         time.sleep(0.5)
->>> ... print(res[0])
->>> ...
-Long task 中文: 3.506s
-  5x small step: 2.503s (71%)
-  1x large step: 1.001s (28%)
+res = []
+with qPyUtils.log.timer.Timer('Long task 中文', output_fn=res.append) as timer:
+    with timer.child('large step'):
+        time.sleep(1)
+    for _ in range(5):
+        with timer.child('small step'):
+            time.sleep(0.5)
+    print(res[0])
+# ----- result:
+# Long task 中文: 3.506s
+#   5x small step: 2.503s (71%)
+#   1x large step: 1.001s (28%)
 
 # user-defined format_string
->>> with qPyUtils.log.timer.Timer('Long task 中文', fmt='{name} --> {elapsed:.3f}') as timer:
->>> ... time.sleep(0.1)
-Long task 中文 --> 0.101s
+with qPyUtils.log.timer.Timer('Long task 中文', fmt='{name} --> {elapsed:.3f}') as timer:
+    time.sleep(0.1)
+# ----- result:
+# Long task 中文 --> 0.101s
 ```
 
 ### Constant variables and functions
@@ -163,6 +164,42 @@ para(tasks, fn, n_jobs=1, is_suppress_progressbar=True)
 fn2 = lambda x: math.factorial(x)
 para([{'x': t} for t in tasks], fn2, use_kwargs=True)
 ```
+### Streaming utils
+Data streaming / Functional programming related utils.
+
+```python
+from qPyUtils.streaming import Repeated
+
+# ---------- decorator over function
+# turns a generator factory function into a sequence-like iterable;
+# which could be iterated multiple epochs
+@Repeated(n_epoch=2) # default to INF; parenthesis is necessary here
+def my_gen():
+    for i in range(3):
+        yield i
+        
+# first 2 epochs as expected
+# NOTE: now the name `my_gen` is the wrapped structure; no parenthesis here
+assert (0, 1, 2) == tuple(my_gen)
+assert (0, 1, 2) == tuple(my_gen)
+# 3rd epoch is empty
+assert tuple() == tuple(my_gen)
+
+# ---------- decorator over method
+class MyClazz(object):
+    @Repeated(n_epoch=2)
+    def my_method(self, a, b, prefix='>>>'):
+        for i in range(a, b):
+            yield '{}{}'.format(prefix, i)
+
+obj = MyClazz()
+my_gen = obj.my_method(0, 3, prefix=':') # call as normal
+
+assert (':0', ':1', ':2') == tuple(my_gen)
+assert (':0', ':1', ':2') == tuple(my_gen)
+assert tuple() == tuple(my_gen) # emtpy for the 3rd epoch
+```
+
 
 ### Text utils
 
