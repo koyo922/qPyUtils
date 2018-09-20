@@ -104,6 +104,33 @@ logger = init_log()
 logger = init_log(is_writing_console=False, log_path='./log/my_log_file')
 ```
 
+### `Timer` as a context manager
+
+```python
+import time
+import qPyUtils.log.timer
+
+# user-defined output_fn; feel free to try using `output_fn=logger.info` etc.
+res = []
+with qPyUtils.log.timer.Timer('Long task 中文', output_fn=res.append) as timer:
+    with timer.child('large step'):
+        time.sleep(1)
+    for _ in range(5):
+        with timer.child('small step'):
+            time.sleep(0.5)
+    print(res[0])
+# ----- result:
+# Long task 中文: 3.506s
+#   5x small step: 2.503s (71%)
+#   1x large step: 1.001s (28%)
+
+# user-defined format_string
+with qPyUtils.log.timer.Timer('Long task 中文', fmt='{name} --> {elapsed:.3f}') as timer:
+    time.sleep(0.1)
+# ----- result:
+# Long task 中文 --> 0.101s
+```
+
 ### Constant variables and functions
 
 - `dummy_fn(*args, **kwargs)`: accepts anything but does nothing
@@ -137,6 +164,42 @@ para(tasks, fn, n_jobs=1, is_suppress_progressbar=True)
 fn2 = lambda x: math.factorial(x)
 para([{'x': t} for t in tasks], fn2, use_kwargs=True)
 ```
+### Streaming utils
+Data streaming / Functional programming related utils.
+
+```python
+from qPyUtils.streaming import Repeat
+
+# ---------- decorator over function
+# turns a generator factory function into a sequence-like iterable;
+# which could be iterated multiple epochs
+@Repeat(n_epoch=2) # default to INF; parenthesis is necessary here
+def my_gen():
+    for i in range(3):
+        yield i
+        
+# first 2 epochs as expected
+# NOTE: now the name `my_gen` is the wrapped structure; no parenthesis here
+assert (0, 1, 2) == tuple(my_gen)
+assert (0, 1, 2) == tuple(my_gen)
+# 3rd epoch is empty
+assert tuple() == tuple(my_gen)
+
+# ---------- decorator over method
+class MyClazz(object):
+    @Repeat(n_epoch=2)
+    def my_method(self, a, b, prefix='>>>'):
+        for i in range(a, b):
+            yield '{}{}'.format(prefix, i)
+
+obj = MyClazz()
+my_gen = obj.my_method(0, 3, prefix=':') # call as normal
+
+assert (':0', ':1', ':2') == tuple(my_gen)
+assert (':0', ':1', ':2') == tuple(my_gen)
+assert tuple() == tuple(my_gen) # emtpy for the 3rd epoch
+```
+
 
 ### Text utils
 
@@ -224,6 +287,15 @@ www.nic.ad.jp	80	8012
 中国互联网络信息中心.中国	80	8013
 ```
 
+A function simulating `rm -f <path>`
+- support both dir and file
+- ignore_errors, if not exist
+
+```python
+from qPyUtils.system.file_system import rm
+rm('path/to/your/dir/or/file', ignore_errors=True)
+```
+
 ### Prerequisites
 
 - A *NIX OS
@@ -281,3 +353,4 @@ This project is licensed under the MIT License
 * `debug.auto_unstub()` https://gist.github.com/jnape/5767029
 * `log.writer()` http://styleguide.baidu.com/style/python/index.html
 * `text.dirty_json_or_none()` https://github.com/codecobblers/dirtyjson
+* `log.timer.Timer()` https://github.com/mherrmann/timer-cm

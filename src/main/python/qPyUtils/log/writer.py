@@ -12,6 +12,7 @@ import os
 import sys
 import logging
 import logging.handlers
+import multiprocessing_logging
 
 
 class _BelowWarningFilter(logging.Filter):
@@ -20,9 +21,9 @@ class _BelowWarningFilter(logging.Filter):
 
 
 # noinspection PyIncorrectDocstring
-def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", backup=365,
+def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT", backup=365,
              is_writing_console=True, is_show_logger_src=False, is_propagate=False,
-             fmt="%(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s",
+             fmt="%(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
     """
     init_log - initialize log module
@@ -44,7 +45,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
                       'H' : Hours
                       'D' : Days
                       'W' : Week day
-                      default value: 'D'
+                      default value: 'MIDNIGHT'; 'D' causes BUG in py2; see https://www.jianshu.com/p/25f70905ae9d
       backup        - how many backup file to keep
                       default value: 365
       to_console    - whether always write to console
@@ -57,8 +58,8 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
                       default value: False
       fmt           - format of the log
                       default format:
-                      %(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s
-                      > INFO: 12-09 18:02:42: log.py:40 * 139814749787872 HELLO WORLD
+                      %(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s
+                      > INFO: 12-09 18:02:42.025: log.py:40 * 139814749787872 HELLO WORLD
       datefmt       - format for the datetime part in ``fmt``
 
     Return:
@@ -120,5 +121,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="D", back
         handler_stderr.setFormatter(formatter)
         logger.addHandler(handler_stderr)
 
+    # wrap the handlers of `logger` with an MultiProcessingHandler.
+    multiprocessing_logging.install_mp_handler(logger=logger)
     # return the logger
     return logger
