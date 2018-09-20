@@ -57,7 +57,9 @@ def forward(source, destination):
             try:
                 source.shutdown(socket.SHUT_RD)
             except socket.error as ex:
-                if ex.errno != 57:  # pragma: no cover ; socket.error: [Errno 57] Socket is not connected
+                if ex.errno not in (57, 107):  # pragma: no cover
+                    # socket.error: [Errno 57] Socket is not connected
+                    # error: [Errno 107] Transport endpoint is not connected
                     raise
 
 
