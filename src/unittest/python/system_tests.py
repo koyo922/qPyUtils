@@ -47,7 +47,7 @@ class TestSystemUtils(TestCase):
 
             start_in_thread(portforward.main)  # might automatically stop when unittest finish
 
-            time.sleep(0.1)  # waiting server to start, critical for Travis-CI
+            time.sleep(0.2)  # waiting server to start, critical for Travis-CI
             expected_prefix = "<title>首页——北京大学百周年纪念讲堂</title>"
             actual_response = requests.get('http://localhost:8011').content.decode('utf8')
             self.assertTrue(expected_prefix in actual_response)
@@ -58,7 +58,7 @@ class TestSystemUtils(TestCase):
         # _thread.start_new_thread(portforward.main, tuple())
         start_in_thread(portforward.main)
 
-        time.sleep(0.1)  # waiting server to start, critical for Travis-CI
+        time.sleep(0.2)  # waiting server to start, critical for Travis-CI
         expected_prefix = """<!DOCTYPE html>
 <html class="no-js" lang="en">
   <head>
