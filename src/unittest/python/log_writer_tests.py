@@ -8,6 +8,7 @@ Date:    2018/8/10 下午4:45
 import logging
 import shutil
 import sys
+import time
 from unittest import TestCase
 
 from mockito import verify, contains, mock
@@ -29,6 +30,7 @@ class TestInitLog(TestCase):
 
         with Path(self.log_file_stem).with_suffix('.log').open() as f:
             logger.info('test logger')
+            time.sleep(0.2)
             self.assertRegexpMatches(f.readlines()[-1], '.*test logger')
         shutil.rmtree(Path(self.log_file_stem).parent.as_posix())
 
@@ -49,5 +51,6 @@ class TestInitLog(TestCase):
             writer.init_log(LOGGER_NAME, self.log_file_stem, is_show_logger_src=True)
             # using specific(may be 3rd-party) logger
             logger.warning('dummy warning')
+            time.sleep(0.2)
             # verify stderr
             verify(sys.stderr, times=1).write(contains(LOGGER_NAME))
