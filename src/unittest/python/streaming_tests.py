@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 
 from unittest import TestCase
 
-from qPyUtils.streaming import Repeated
+from qPyUtils.streaming import Repeat
 
 
 class TestStreaming(TestCase):
@@ -17,13 +17,13 @@ class TestStreaming(TestCase):
     def test_repeated_deco_fn(self):
         # trying to decorate before __init__
         with self.assertRaisesRegexp(AssertionError, 'init before use'):
-            @Repeated
+            @Repeat
             def my_gen_err():
                 yield 1
                 yield 2
 
         # correctly decorate a function
-        @Repeated(n_epoch=2)
+        @Repeat(n_epoch=2)
         def my_gen():
             for i in range(3):
                 yield i
@@ -37,7 +37,7 @@ class TestStreaming(TestCase):
     def test_repeated_deco_method(self):
 
         class MyClazz(object):
-            @Repeated(n_epoch=2)
+            @Repeat(n_epoch=2)
             def my_method(self, a, b, prefix='>>>'):
                 for i in range(a, b):
                     yield '{}{}'.format(prefix, i)
@@ -56,10 +56,10 @@ class TestStreaming(TestCase):
 
         # try wrapping a generator instead of its factory
         with self.assertRaisesRegexp(AssertionError, '.*FACTORY FUNCTION/METHOD.*'):
-            Repeated()(my_gen())
+            Repeat()(my_gen())
 
         # hand wrap a generator function
-        r = Repeated(n_epoch=2)(my_gen)  # note: there is no extra parenthesis after `my_gen`
+        r = Repeat(n_epoch=2)(my_gen)  # note: there is no extra parenthesis after `my_gen`
         self.assertEqual((0, 1, 2), tuple(r))
         self.assertEqual((0, 1, 2), tuple(r))
         self.assertEqual(tuple(), tuple(r))

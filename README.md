@@ -168,12 +168,12 @@ para([{'x': t} for t in tasks], fn2, use_kwargs=True)
 Data streaming / Functional programming related utils.
 
 ```python
-from qPyUtils.streaming import Repeated
+from qPyUtils.streaming import Repeat
 
 # ---------- decorator over function
 # turns a generator factory function into a sequence-like iterable;
 # which could be iterated multiple epochs
-@Repeated(n_epoch=2) # default to INF; parenthesis is necessary here
+@Repeat(n_epoch=2) # default to INF; parenthesis is necessary here
 def my_gen():
     for i in range(3):
         yield i
@@ -187,7 +187,7 @@ assert tuple() == tuple(my_gen)
 
 # ---------- decorator over method
 class MyClazz(object):
-    @Repeated(n_epoch=2)
+    @Repeat(n_epoch=2)
     def my_method(self, a, b, prefix='>>>'):
         for i in range(a, b):
             yield '{}{}'.format(prefix, i)

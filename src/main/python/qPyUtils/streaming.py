@@ -41,7 +41,7 @@ def try_tuple(obj):
     return obj,  # NOTE the comma, made into tuple
 
 
-class Repeated(object):
+class Repeat(object):
     """
     A decorator class for wrapping a generator_factory;
     so that it could be iterated multiple epochs, just like a tuple/list
@@ -50,7 +50,7 @@ class Repeated(object):
     def __init__(self, n_epoch=float('inf')):
         assert isinstance(n_epoch, Number) and n_epoch >= 1, \
             ('Usage:'
-             '@Repeated(n_epoch=...)  # NOTE: init before use; `n_epoch` default to INF'
+             '@Repeat(n_epoch=...)  # NOTE: init before use; `n_epoch` default to INF'
              'def my_generator_function():'
              '  ...')
         self.n_epoch = n_epoch
@@ -88,7 +88,7 @@ class Repeated(object):
         ```python
         #----- define
         class MyClazz(object):
-            @Repeated(n_epoch=2) # ..... (1)
+            @Repeat(n_epoch=2) # ..... (1)
             def my_method(self, a, b, prefix='>>>'):
                 for i in range(a, b):
                     yield '{}{}'.format(prefix, i)
@@ -97,9 +97,9 @@ class Repeated(object):
         my_gen = obj.my_method(0, 3, prefix=':') # ..... (2)
 
         #----- is equivalent to
-        r = Repeated(n_epoch=2) # the `Repeated(n_epoch=2)` part at (1)
+        r = Repeat(n_epoch=2) # the `Repeat(n_epoch=2)` part at (1)
         MyClazz.my_method = r(MyClazz.my_method) # the `@` part at (1)
-        got_fn = Repeated.__get__(r, obj, MyClazz) # the `obj.my_method` part at (2)
+        got_fn = Repeat.__get__(r, obj, MyClazz) # the `obj.my_method` part at (2)
         my_gen = got_fn(0, 3, prefix=':') # the `(0, 3, prefix=':')` part at (2)
         ```
         :param instance: the calling object
