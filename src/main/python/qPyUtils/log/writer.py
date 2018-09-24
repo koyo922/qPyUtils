@@ -12,7 +12,6 @@ import os
 import sys
 import logging
 import logging.handlers
-import multiprocessing_logging
 
 
 class _BelowWarningFilter(logging.Filter):
@@ -26,7 +25,8 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
              fmt="%(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
     """
-    init_log - initialize log module
+    init_log - initialize log module;
+    WARNING: IT IS NOT SAFE FOR MULTI-PROCESSING APPS. LOGS MAY BE LOST OR PRINT INTO A RANDOM FILE.
 
     Args:
       logger_name   - name of the logger to get, if None, return root logger
@@ -121,7 +121,5 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
         handler_stderr.setFormatter(formatter)
         logger.addHandler(handler_stderr)
 
-    # wrap the handlers of `logger` with an MultiProcessingHandler.
-    multiprocessing_logging.install_mp_handler(logger=logger)
     # return the logger
     return logger
