@@ -173,21 +173,18 @@ from qPyUtils.streaming import Repeat
 # ---------- decorator over function
 # turns a generator factory function into a sequence-like iterable;
 # which could be iterated multiple epochs
-@Repeat(n_epoch=2) # default to INF; parenthesis is necessary here
+@Repeat
 def my_gen():
     for i in range(3):
         yield i
         
-# first 2 epochs as expected
 # NOTE: now the name `my_gen` is the wrapped structure; no parenthesis here
 assert (0, 1, 2) == tuple(my_gen)
 assert (0, 1, 2) == tuple(my_gen)
-# 3rd epoch is empty
-assert tuple() == tuple(my_gen)
 
 # ---------- decorator over method
 class MyClazz(object):
-    @Repeat(n_epoch=2)
+    @Repeat
     def my_method(self, a, b, prefix='>>>'):
         for i in range(a, b):
             yield '{}{}'.format(prefix, i)
@@ -197,7 +194,6 @@ my_gen = obj.my_method(0, 3, prefix=':') # call as normal
 
 assert (':0', ':1', ':2') == tuple(my_gen)
 assert (':0', ':1', ':2') == tuple(my_gen)
-assert tuple() == tuple(my_gen) # emtpy for the 3rd epoch
 ```
 
 
