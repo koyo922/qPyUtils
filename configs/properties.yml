@@ -21,6 +21,7 @@ flake8_ignore: 'F401'
 coverage_branch_threshold_warn: 50
 coverage_branch_partial_threshold_warn: 50
 coverage_exceptions:
+  - qPyUtils
   - qPyUtils.log.parser
   - qPyUtils.log.parser.base
   - qPyUtils.log.parser.sn_log

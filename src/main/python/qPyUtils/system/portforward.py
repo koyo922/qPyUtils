@@ -14,7 +14,6 @@ Usage:
 
 Demo conf file:
 <host>	<port>	<local_port>
-www.pku-hall.com	80	8011
 www.nic.ad.jp	80	8012
 中国互联网络信息中心.中国	80	8013
 """

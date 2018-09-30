@@ -8,10 +8,14 @@ Authors: qianweishuo<qzy922@gmail.com>
 Date:    2018/8/10 下午4:46
 """
 from io import open
+import sys
 
 import yaml
 from pybuilder.cli import ColoredStdOutLogger
 from pybuilder.core import use_plugin, init, Project, Author
+
+sys.path.insert(0, './src/main/python')
+import qPyUtils
 
 use_plugin('python.core')
 use_plugin("pypi:pybuilder_read_profile_properties")
@@ -30,7 +34,7 @@ name = 'qPyUtils'
 authors = [Author('Qian Weishuo ', 'qzy922@gmail.com'), ]
 license = 'MIT License'
 url = 'https://github.com/koyo922/qPyUtils'
-version = '0.1.8.dev'
+version = qPyUtils.__version__
 
 
 @init

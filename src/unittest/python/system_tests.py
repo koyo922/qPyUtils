@@ -37,9 +37,8 @@ class TestSystemUtils(TestCase):
 
         # ---------- test if config file works
         with tempfile.NamedTemporaryFile() as tmp:
-            with open(tmp.name, 'wt+', encoding='utf8') as f:
+            with open(tmp.name, 'wt', encoding='utf8') as f:
                 f.write("""
-            www.pku-hall.com	80	8011
             www.nic.ad.jp	80	8012
             中国互联网络信息中心.中国	80	8013
             """.strip())
@@ -48,8 +47,8 @@ class TestSystemUtils(TestCase):
             start_in_thread(portforward.main)  # might automatically stop when unittest finish
 
             time.sleep(0.2)  # waiting server to start, critical for Travis-CI
-            expected_prefix = "<title>首页——北京大学百周年纪念讲堂</title>"
-            actual_response = requests.get('http://localhost:8011').content.decode('utf8')
+            expected_prefix = '<title>Japan Network Information Center - JPNIC</title>'
+            actual_response = requests.get('http://localhost:8012').content.decode('utf8')
             self.assertTrue(expected_prefix in actual_response)
 
         # ---------- test if command line args works

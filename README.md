@@ -265,10 +265,10 @@ A command line tool for forwarding port(s); Unicode Domain-Name is also supporte
 # ----- ensure PYTHON_BIN is in the PATH; consider adding it to ~/.bashrc
 PYTHON_BIN=$(python -c 'from distutils.sysconfig import EXEC_PREFIX as p; print(p + "/bin")')
 export PATH=${PYTHON_BIN}:$PATH
-portforward -H www.pku-hall.com -p 80 -l 8011
+portforward -H www.nic.ad.jp -p 80 -l 8012
 
 # ----- OR just simply call by `python -m ...` as an ad-hoc solution
-python -m qPyUtils.system.portforward -H www.pku-hall.com -p 80 -l 8011
+python -m qPyUtils.system.portforward -H www.nic.ad.jp -p 80 -l 8012
 ```
 
 ```commandline
@@ -278,7 +278,6 @@ Usage:
 
 Demo conf file:
 <host>	<port>	<local_port>
-www.pku-hall.com	80	8011
 www.nic.ad.jp	80	8012
 中国互联网络信息中心.中国	80	8013
 ```
