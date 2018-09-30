@@ -15,15 +15,9 @@ from qPyUtils.streaming import Repeat
 class TestStreaming(TestCase):
 
     def test_repeated_deco_fn(self):
-        # trying to decorate before __init__
-        with self.assertRaisesRegexp(AssertionError, 'init before use'):
-            @Repeat
-            def my_gen_err():
-                yield 1
-                yield 2
 
         # correctly decorate a function
-        @Repeat(n_epoch=2)
+        @Repeat
         def my_gen():
             for i in range(3):
                 yield i
@@ -31,13 +25,11 @@ class TestStreaming(TestCase):
         # first 2 epochs as expected
         self.assertEqual((0, 1, 2), tuple(my_gen))
         self.assertEqual((0, 1, 2), tuple(my_gen))
-        # 3rd epoch is empty
-        self.assertEqual(tuple(), tuple(my_gen))
 
     def test_repeated_deco_method(self):
 
         class MyClazz(object):
-            @Repeat(n_epoch=2)
+            @Repeat
             def my_method(self, a, b, prefix='>>>'):
                 for i in range(a, b):
                     yield '{}{}'.format(prefix, i)
@@ -47,7 +39,6 @@ class TestStreaming(TestCase):
 
         self.assertEqual((':0', ':1', ':2'), tuple(my_gen))
         self.assertEqual((':0', ':1', ':2'), tuple(my_gen))
-        self.assertEqual(tuple(), tuple(my_gen))
 
     def test_repeated_hand_wrap(self):
         def my_gen():
@@ -56,10 +47,9 @@ class TestStreaming(TestCase):
 
         # try wrapping a generator instead of its factory
         with self.assertRaisesRegexp(AssertionError, '.*FACTORY FUNCTION/METHOD.*'):
-            Repeat()(my_gen())
+            Repeat(my_gen())
 
         # hand wrap a generator function
-        r = Repeat(n_epoch=2)(my_gen)  # note: there is no extra parenthesis after `my_gen`
+        r = Repeat(my_gen)  # note: there is no extra parenthesis after `my_gen`
         self.assertEqual((0, 1, 2), tuple(r))
         self.assertEqual((0, 1, 2), tuple(r))
-        self.assertEqual(tuple(), tuple(r))

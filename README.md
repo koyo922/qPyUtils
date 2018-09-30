@@ -173,21 +173,18 @@ from qPyUtils.streaming import Repeat
 # ---------- decorator over function
 # turns a generator factory function into a sequence-like iterable;
 # which could be iterated multiple epochs
-@Repeat(n_epoch=2) # default to INF; parenthesis is necessary here
+@Repeat
 def my_gen():
     for i in range(3):
         yield i
         
-# first 2 epochs as expected
 # NOTE: now the name `my_gen` is the wrapped structure; no parenthesis here
 assert (0, 1, 2) == tuple(my_gen)
 assert (0, 1, 2) == tuple(my_gen)
-# 3rd epoch is empty
-assert tuple() == tuple(my_gen)
 
 # ---------- decorator over method
 class MyClazz(object):
-    @Repeat(n_epoch=2)
+    @Repeat
     def my_method(self, a, b, prefix='>>>'):
         for i in range(a, b):
             yield '{}{}'.format(prefix, i)
@@ -197,7 +194,6 @@ my_gen = obj.my_method(0, 3, prefix=':') # call as normal
 
 assert (':0', ':1', ':2') == tuple(my_gen)
 assert (':0', ':1', ':2') == tuple(my_gen)
-assert tuple() == tuple(my_gen) # emtpy for the 3rd epoch
 ```
 
 
@@ -269,10 +265,10 @@ A command line tool for forwarding port(s); Unicode Domain-Name is also supporte
 # ----- ensure PYTHON_BIN is in the PATH; consider adding it to ~/.bashrc
 PYTHON_BIN=$(python -c 'from distutils.sysconfig import EXEC_PREFIX as p; print(p + "/bin")')
 export PATH=${PYTHON_BIN}:$PATH
-portforward -H www.pku-hall.com -p 80 -l 8011
+portforward -H www.nic.ad.jp -p 80 -l 8012
 
 # ----- OR just simply call by `python -m ...` as an ad-hoc solution
-python -m qPyUtils.system.portforward -H www.pku-hall.com -p 80 -l 8011
+python -m qPyUtils.system.portforward -H www.nic.ad.jp -p 80 -l 8012
 ```
 
 ```commandline
@@ -282,7 +278,6 @@ Usage:
 
 Demo conf file:
 <host>	<port>	<local_port>
-www.pku-hall.com	80	8011
 www.nic.ad.jp	80	8012
 中国互联网络信息中心.中国	80	8013
 ```

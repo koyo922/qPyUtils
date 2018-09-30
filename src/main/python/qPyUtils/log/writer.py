@@ -12,7 +12,6 @@ import os
 import sys
 import logging
 import logging.handlers
-import multiprocessing_logging
 
 
 class _BelowWarningFilter(logging.Filter):
@@ -23,10 +22,11 @@ class _BelowWarningFilter(logging.Filter):
 # noinspection PyIncorrectDocstring
 def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT", backup=365,
              is_writing_console=True, is_show_logger_src=False, is_propagate=False,
-             fmt="%(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s",
+             fmt="%(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
     """
-    init_log - initialize log module
+    init_log - initialize log module;
+    WARNING: IT IS NOT SAFE FOR MULTI-PROCESSING APPS. LOGS MAY BE LOST OR PRINT INTO A RANDOM FILE.
 
     Args:
       logger_name   - name of the logger to get, if None, return root logger
@@ -58,8 +58,8 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
                       default value: False
       fmt           - format of the log
                       default format:
-                      %(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d * %(thread)d %(message)s
-                      > INFO: 12-09 18:02:42.025: log.py:40 * 139814749787872 HELLO WORLD
+                      %(levelname)s: %(asctime)s.%(msecs)03d: %(filename)s:%(lineno)d %(message)s
+                      > INFO: 12-09 18:02:42.025: log.py:40 HELLO WORLD
       datefmt       - format for the datetime part in ``fmt``
 
     Return:
@@ -89,6 +89,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
 
         handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.debug",
                                                             when=when,
+                                                            encoding='utf8',
                                                             backupCount=backup)
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(formatter)
@@ -96,6 +97,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
 
         handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log",
                                                             when=when,
+                                                            encoding='utf8',
                                                             backupCount=backup)
         handler.setLevel(level)
         handler.setFormatter(formatter)
@@ -103,6 +105,7 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
 
         handler = logging.handlers.TimedRotatingFileHandler(log_path + ".log.wf",
                                                             when=when,
+                                                            encoding='utf8',
                                                             backupCount=backup)
         handler.setLevel(logging.WARNING)
         handler.setFormatter(formatter)
@@ -121,7 +124,5 @@ def init_log(logger_name=None, log_path=None, level=logging.INFO, when="MIDNIGHT
         handler_stderr.setFormatter(formatter)
         logger.addHandler(handler_stderr)
 
-    # wrap the handlers of `logger` with an MultiProcessingHandler.
-    multiprocessing_logging.install_mp_handler(logger=logger)
     # return the logger
     return logger

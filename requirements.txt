@@ -14,4 +14,3 @@ mockito
 tornado
 requests
 docopt
-multiprocessing_logging

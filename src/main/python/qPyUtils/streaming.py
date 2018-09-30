@@ -47,38 +47,29 @@ class Repeat(object):
     so that it could be iterated multiple epochs, just like a tuple/list
     """
 
-    def __init__(self, n_epoch=float('inf')):
-        assert isinstance(n_epoch, Number) and n_epoch >= 1, \
-            ('Usage:'
-             '@Repeat(n_epoch=...)  # NOTE: init before use; `n_epoch` default to INF'
-             'def my_generator_function():'
-             '  ...')
-        self.n_epoch = n_epoch
-        self.gen_fn = None  # type: Callable[[Any], Generator]
-        self.cur_iter = 0
-
-    def __iter__(self):
+    def __init__(self, raw_fn):
         """
-        as a re-enterable iterator
-        """
-        if self.cur_iter >= self.n_epoch:
-            return
-        for i in self.gen_fn():
-            yield i
-        self.cur_iter += 1
-
-    def __call__(self, gen_fn, *args, **kwargs):
-        """
-        wrap the `gen_fn` along with args/kwargs as the factory of generator
-        :param gen_fn: the generator factory (either as function or method)
-        :param args: positional args for using in `gen_fn`
-        :param kwargs: keyword args for using in `gen_fn`
+        wrap the `raw_fn` as the factory of generator
+        :param raw_fn: the generator factory (either as function or method)
         :return: self (which is iterable)
         """
-        assert callable(gen_fn), 'Please feed in a *FACTORY FUNCTION/METHOD* for the generator,' \
+        assert callable(raw_fn), 'Please feed in a *FACTORY FUNCTION/METHOD* for the generator,' \
                                  ' instead of the generator itself!'
-        self.gen_fn = F(gen_fn, *args, **kwargs)
+        self.raw_fn = raw_fn  # may be a function or method
+        self.bound_fn = None  # bound one (only meaningful for method)
+        self.dst_fn = None  # the one for feed outputing
+        self.cur_iter = 0
+
+    def __call__(self, *args, **kwargs):
+        """ setting the feeding source of self """
+        # use self.bound_fn if available
+        self.dst_fn = F((self.bound_fn or self.raw_fn), *args, **kwargs)
         return self
+
+    def __iter__(self):
+        for e in (self.dst_fn or self.bound_fn or self.raw_fn)():
+            yield e
+        self.cur_iter += 1
 
     def __get__(self, instance, owner):
         """
@@ -88,7 +79,7 @@ class Repeat(object):
         ```python
         #----- define
         class MyClazz(object):
-            @Repeat(n_epoch=2) # ..... (1)
+            @Repeat # ..... (1)
             def my_method(self, a, b, prefix='>>>'):
                 for i in range(a, b):
                     yield '{}{}'.format(prefix, i)
@@ -97,7 +88,7 @@ class Repeat(object):
         my_gen = obj.my_method(0, 3, prefix=':') # ..... (2)
 
         #----- is equivalent to
-        r = Repeat(n_epoch=2) # the `Repeat(n_epoch=2)` part at (1)
+        r = Repeat # the `Repeat` part at (1)
         MyClazz.my_method = r(MyClazz.my_method) # the `@` part at (1)
         got_fn = Repeat.__get__(r, obj, MyClazz) # the `obj.my_method` part at (2)
         my_gen = got_fn(0, 3, prefix=':') # the `(0, 3, prefix=':')` part at (2)
@@ -106,5 +97,5 @@ class Repeat(object):
         :param owner: not used
         :return:
         """
-        bound_method = F(self.gen_fn, instance)
-        return F(self, bound_method)  # use the bound-method as `gen_fn` for `self.__call__()`
+        self.bound_fn = F(self.raw_fn, instance)
+        return self

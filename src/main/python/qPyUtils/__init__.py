@@ -1,3 +1,4 @@
-from qPyUtils.log.writer import init_log
+import qPyUtils.log.writer
 
-logger = init_log(__name__)
+logger = qPyUtils.log.writer.init_log(__name__)
+__version__ = '0.1.8'
