@@ -34,7 +34,7 @@ def para(array, fn, n_jobs=max(1, multiprocessing.cpu_count() - 1),
     front = [fn(**a) if use_kwargs else fn(*try_tuple(a)) for a in array[:front_num]]  # type: List[Any]
     # If we set n_jobs to 1, just run a list comprehension. This is useful for benchmarking and debugging.
     if n_jobs == 1:
-        return front + [fn(**a) if use_kwargs else fn(a) for a in
+        return front + [fn(**a) if use_kwargs else fn(*try_tuple(a)) for a in
                         tqdm(array[front_num:], disable=is_suppress_progressbar)]
     # Assemble the workers
     pool = ProcessPoolExecutor if pool_type == 'process' else ThreadPoolExecutor
