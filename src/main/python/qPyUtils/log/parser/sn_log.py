@@ -30,8 +30,8 @@ class SnLogLoader(BaseLogParser):
         with path.open(mode='rt', encoding='utf8') as lines:
             return seq(csplit(lines, re.compile(r'^{"vers'))).map(''.join).cache()  # 注意缓存，否则文件关闭后流也失效
 
-    def block2records(self, block):
-        # type: (Text) -> Iterable[dict]
+    def block2records(self, block, path):
+        # type: (Text, Path) -> Iterable[dict]
         j = dirty_json_or_none(block)
         if j is None:
             yield None

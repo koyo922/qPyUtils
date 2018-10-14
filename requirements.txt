@@ -1,6 +1,6 @@
 six
 pathlib
-numpy==1.14.5
+numpy
 pandas
 chainmap; python_version < "3"
 pyfunctional

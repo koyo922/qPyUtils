@@ -33,7 +33,7 @@ class SnValiLoader(BaseLogParser):
     def logfile2blocks(self, path):
         pass
 
-    def block2records(self, block):
+    def block2records(self, block, path):
         pass
 
     def load_single_file(self, path=None):
