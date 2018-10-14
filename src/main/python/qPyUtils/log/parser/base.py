@@ -12,6 +12,7 @@ Date:    2018/8/3 上午9:44
 import abc
 from abc import abstractmethod
 from datetime import datetime
+import itertools
 
 import six
 # noinspection PyCompatibility
@@ -103,7 +104,8 @@ class BaseLogParser:
         # noinspection PyUnresolvedReferences
         df = (seq(self.logfile2blocks(path))  # 抽取得到stream of block（就是str）
               .filter(None)  # 过滤掉空的block
-              .map(self.block2records)
+              .zip(itertools.repeat(path))
+              .smap(self.block2records)  # 补回path信息，一起喂给 block2records
               .flatten()  # 每个block可能对应一至多条记录
               .take(self.take_head)  # 只取部分记录
               .to_pandas()
@@ -141,6 +143,6 @@ class BaseLogParser:
         """ 从每个log文件中抽取若干个block(对应于一条或一组方便一起提取的记录) """
 
     @abstractmethod
-    def block2records(self, block):
-        # type: (Text) -> Iterable[dict]
+    def block2records(self, block, path):
+        # type: (Text, Path) -> Iterable[dict]
         """ 将每个block对应的str转化为多个records(如果是一个，就用tuple或者yield包裹) """

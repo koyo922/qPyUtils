@@ -28,8 +28,8 @@ class TsLogLoader(BaseLogParser):
         # type: (Path) -> Iterable[str]
         return seq.open(path.as_posix(), encoding='utf8')
 
-    def block2records(self, block):
-        # type: (Text) -> Iterable[dict]
+    def block2records(self, block, path):
+        # type: (Text, Path) -> Iterable[dict]
         """
         将ts_log中的一行记录转换成dict
         :param block:

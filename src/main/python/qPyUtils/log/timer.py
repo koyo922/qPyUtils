@@ -36,7 +36,7 @@ class Timer(object):
         if output_fn is None or output_fn == 'dummy':
             self.output_fn = dummy_fn
         elif output_fn == 'stdout':
-            self.output_fn = sys.stdout.write
+            self.output_fn = lambda x: sys.stdout.write(x + '\n')
         else:
             self.output_fn = output_fn
         if fmt is not None:  # overwrite the default `format()` method
